@@ -1,0 +1,20 @@
+services:
+    backend:
+        build:
+            context: .
+            dockerfile: _docker/app/Dockerfile
+        volumes:
+            - ./:/app/backend
+        container_name: domain-checker-app
+
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        volumes:
+            - ./:/app/backend
+            - ./_docker/nginx/conf.d/:/etc/nginx/conf.d
+        ports:
+            - "8080:8080"
+        depends_on:
+            - backend
+        container_name: domain-checker-nginx
